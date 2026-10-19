@@ -1,4 +1,3 @@
-$themeJson = @'
 {
   "name": "RetailLakehouseTheme",
   "dataColors": [
@@ -15,8 +14,3 @@ $themeJson = @'
   "foreground": "#0F172A",
   "tableAccent": "#0284C7"
 }
-'@
-
-# Ghi file chuẩn UTF8 không kèm BOM để Power BI đọc chuẩn xác
-[System.IO.File]::WriteAllText("$PWD\retail_lakehouse_theme.json", $themeJson, [System.Text.UTF8Encoding]::new($false))
-Write-Host "Đã xuất file retail_lakehouse_theme.json chuẩn!"
