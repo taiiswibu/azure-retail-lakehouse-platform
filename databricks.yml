@@ -1,0 +1,50 @@
+bundle:
+  name: azure-retail-lakehouse
+
+include:
+  - resources/*.yml
+
+artifacts:
+  default:
+    type: whl
+    path: .
+    build: python -m pip wheel . --no-deps --wheel-dir dist
+
+variables:
+  catalog:
+    description: Unity Catalog catalog name
+    default: retail_dev
+  storage_account_name:
+    description: ADLS Gen2 storage account deployed by Bicep
+    default: stretaildevrubphn
+  eventhubs_namespace:
+    description: Azure Event Hubs namespace name
+    default: evhns-retail-dev-rubphn
+  secret_scope:
+    description: Databricks secret scope containing Event Hubs consumer credentials
+    default: retail-secrets
+  spark_version:
+    description: Databricks Runtime; 16.4 LTS maps to local Spark 3.5 tests
+    default: 16.4.x-scala2.12
+  node_type_id:
+    description: Azure VM node type available in the selected region
+    default: Standard_D4s_v3
+
+sync:
+  include:
+    - notebooks/**
+    - src/**
+    - sql/**
+
+targets:
+  dev:
+
+    default: true
+    mode: development
+    workspace:
+      root_path: /Workspace/Users/${workspace.current_user.userName}/.bundle/${bundle.name}/${bundle.target}
+  demo:
+    mode: production
+    workspace:
+      root_path: /Workspace/Shared/.bundle/${bundle.name}/${bundle.target}
+

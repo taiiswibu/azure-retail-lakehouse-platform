@@ -1,0 +1,171 @@
+resources:
+  jobs:
+    retail_bootstrap:
+      name: "[${bundle.target}] retail-lakehouse-bootstrap"
+      max_concurrent_runs: 1
+      queue:
+        enabled: true
+      tags:
+        project: azure-retail-lakehouse
+        workload: bootstrap
+      job_clusters:
+        - job_cluster_key: retail_single_node
+          new_cluster: &single_node_cluster
+            spark_version: ${var.spark_version}
+            node_type_id: ${var.node_type_id}
+            num_workers: 0
+            data_security_mode: SINGLE_USER
+            spark_conf:
+              spark.master: local[*, 4]
+              spark.databricks.cluster.profile: singleNode
+              spark.sql.session.timeZone: UTC
+            custom_tags:
+              ResourceClass: SingleNode
+              Project: AzureRetailLakehouse
+      tasks:
+        - task_key: bootstrap_unity_catalog
+          job_cluster_key: retail_single_node
+          timeout_seconds: 7200 
+          notebook_task:
+            notebook_path: ../notebooks/00_setup_catalog.py
+            base_parameters:
+              catalog: ${var.catalog}
+              storage_account_name: ${var.storage_account_name}
+          libraries:
+            - whl: ../dist/*.whl
+
+    retail_batch_pipeline:
+      name: "[${bundle.target}] retail-batch-medallion"
+      max_concurrent_runs: 1
+      queue:
+        enabled: true
+      tags:
+        project: azure-retail-lakehouse
+        workload: batch
+      job_clusters:
+        - job_cluster_key: retail_single_node
+          new_cluster: *single_node_cluster
+      tasks:
+        - task_key: bronze_batch
+          job_cluster_key: retail_single_node
+          timeout_seconds: 3600
+          notebook_task:
+            notebook_path: ../notebooks/01_bronze_batch.py
+            base_parameters:
+              catalog: ${var.catalog}
+          libraries:
+            - whl: ../dist/*.whl
+        - task_key: silver
+          depends_on:
+            - task_key: bronze_batch
+          job_cluster_key: retail_single_node
+          timeout_seconds: 3600
+          notebook_task:
+            notebook_path: ../notebooks/03_silver.py
+            base_parameters:
+              catalog: ${var.catalog}
+          libraries:
+            - whl: ../dist/*.whl
+        - task_key: gold
+          depends_on:
+            - task_key: silver
+          job_cluster_key: retail_single_node
+          timeout_seconds: 3600
+          notebook_task:
+            notebook_path: ../notebooks/04_gold.py
+            base_parameters:
+              catalog: ${var.catalog}
+          libraries:
+            - whl: ../dist/*.whl
+        - task_key: quality_gate
+          depends_on:
+            - task_key: gold
+          job_cluster_key: retail_single_node
+          timeout_seconds: 1800
+          notebook_task:
+            notebook_path: ../notebooks/05_quality.py
+            base_parameters:
+              catalog: ${var.catalog}
+          libraries:
+            - whl: ../dist/*.whl
+
+    retail_stream_pipeline:
+      name: "[${bundle.target}] retail-stream-medallion"
+      max_concurrent_runs: 1
+      queue:
+        enabled: true
+      tags:
+        project: azure-retail-lakehouse
+        workload: streaming
+      job_clusters:
+        - job_cluster_key: retail_single_node
+          new_cluster: *single_node_cluster
+      tasks:
+        - task_key: bronze_stream
+          job_cluster_key: retail_single_node
+          timeout_seconds: 3600
+          notebook_task:
+            notebook_path: ../notebooks/02_bronze_stream.py
+            base_parameters:
+              catalog: ${var.catalog}
+              eventhubs_namespace: ${var.eventhubs_namespace}
+              secret_scope: ${var.secret_scope}
+              secret_key: eventhubs-connection-string
+              clickstream_hub: clickstream
+              iot_hub: iot-telemetry
+          libraries:
+            - whl: ../dist/*.whl
+        - task_key: silver
+          depends_on:
+            - task_key: bronze_stream
+          job_cluster_key: retail_single_node
+          timeout_seconds: 3600
+          notebook_task:
+            notebook_path: ../notebooks/03_silver.py
+            base_parameters:
+              catalog: ${var.catalog}
+          libraries:
+            - whl: ../dist/*.whl
+        - task_key: gold
+          depends_on:
+            - task_key: silver
+          job_cluster_key: retail_single_node
+          timeout_seconds: 3600
+          notebook_task:
+            notebook_path: ../notebooks/04_gold.py
+            base_parameters:
+              catalog: ${var.catalog}
+          libraries:
+            - whl: ../dist/*.whl
+        - task_key: quality_gate
+          depends_on:
+            - task_key: gold
+          job_cluster_key: retail_single_node
+          timeout_seconds: 1800
+          notebook_task:
+            notebook_path: ../notebooks/05_quality.py
+            base_parameters:
+              catalog: ${var.catalog}
+          libraries:
+            - whl: ../dist/*.whl
+
+    retail_maintenance:
+      name: "[${bundle.target}] retail-delta-maintenance"
+      max_concurrent_runs: 1
+      tags:
+        project: azure-retail-lakehouse
+        workload: maintenance
+      job_clusters:
+        - job_cluster_key: retail_single_node
+          new_cluster: *single_node_cluster
+      tasks:
+        - task_key: optimize_analyze_vacuum
+          job_cluster_key: retail_single_node
+          timeout_seconds: 3600
+          notebook_task:
+            notebook_path: ../notebooks/06_maintenance.py
+            base_parameters:
+              catalog: ${var.catalog}
+          libraries:
+            - whl: ../dist/*.whl
+

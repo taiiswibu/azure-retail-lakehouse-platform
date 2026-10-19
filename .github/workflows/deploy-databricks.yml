@@ -1,0 +1,37 @@
+name: Deploy Databricks Bundle
+
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: Bundle target
+        type: choice
+        options: [dev, demo]
+        default: dev
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.target }}
+    env:
+      DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+      DATABRICKS_CLIENT_ID: ${{ secrets.DATABRICKS_CLIENT_ID }}
+      DATABRICKS_CLIENT_SECRET: ${{ secrets.DATABRICKS_CLIENT_SECRET }}
+      BUNDLE_VAR_storage_account_name: ${{ vars.STORAGE_ACCOUNT_NAME }}
+      BUNDLE_VAR_access_connector_id: ${{ vars.ACCESS_CONNECTOR_ID }}
+      BUNDLE_VAR_eventhubs_namespace: ${{ vars.EVENTHUBS_NAMESPACE }}
+      BUNDLE_VAR_catalog: ${{ vars.DATABRICKS_CATALOG }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - uses: databricks/setup-cli@main
+      - name: Validate bundle
+        run: databricks bundle validate -t "${{ inputs.target }}"
+      - name: Deploy bundle
+        run: databricks bundle deploy -t "${{ inputs.target }}"
+

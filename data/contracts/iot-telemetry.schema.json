@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/contracts/iot-telemetry.schema.json",
+  "title": "WarehouseTelemetry",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["event_id", "event_ts", "device_id", "warehouse_id", "sensor_type"],
+  "properties": {
+    "event_id": {"type": "string", "format": "uuid"},
+    "event_ts": {"type": "string", "format": "date-time"},
+    "device_id": {"type": "string", "minLength": 1},
+    "warehouse_id": {"type": "string", "pattern": "^WH-[0-9]{2}$"},
+    "sensor_type": {"type": "string", "enum": ["environment"]},
+    "temperature_c": {"type": ["number", "null"], "minimum": -30, "maximum": 70},
+    "humidity_pct": {"type": ["number", "null"], "minimum": 0, "maximum": 100},
+    "battery_pct": {"type": ["number", "null"], "minimum": 0, "maximum": 100},
+    "is_door_open": {"type": ["boolean", "null"]}
+  }
+}
+

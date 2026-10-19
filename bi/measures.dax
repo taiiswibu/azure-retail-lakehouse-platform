@@ -1,0 +1,33 @@
+Total Revenue = SUM(fact_sales[recognized_revenue])
+
+Total Orders = DISTINCTCOUNT(fact_sales[order_id])
+
+Units Sold = SUM(fact_sales[quantity])
+
+Average Order Value = DIVIDE([Total Revenue], [Total Orders], 0)
+
+Buying Customers = DISTINCTCOUNT(fact_sales[customer_sk])
+
+Revenue Previous Period =
+CALCULATE([Total Revenue], DATEADD(dim_date[date], -1, MONTH))
+
+Revenue Growth % =
+DIVIDE([Total Revenue] - [Revenue Previous Period], [Revenue Previous Period], 0)
+
+Gross Margin =
+SUMX(
+    fact_sales,
+    fact_sales[gross_amount] - RELATED(dim_product[cost_price]) * fact_sales[quantity]
+)
+
+Gross Margin % = DIVIDE([Gross Margin], SUM(fact_sales[gross_amount]), 0)
+
+Failed Quality Checks =
+CALCULATE(COUNTROWS(vw_data_quality_latest), vw_data_quality_latest[status] = "FAIL")
+
+Purchase Conversion % =
+DIVIDE(SUM(mart_digital_funnel[purchase]), SUM(mart_digital_funnel[product_view]), 0)
+
+Warehouse Alerts =
+CALCULATE(COUNTROWS(mart_inventory_health), mart_inventory_health[health_status] = "alert")
+

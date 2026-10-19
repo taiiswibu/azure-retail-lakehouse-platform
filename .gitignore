@@ -1,0 +1,112 @@
+# ============================================================
+# Python / PySpark
+# ============================================================
+.venv/
+venv/
+env/
+ENV/
+__pycache__/
+*.py[cod]
+*$py.class
+__pypackages__/
+*.egg-info/
+.eggs/
+site-packages/
+
+# Package/build outputs
+build/
+dist/
+wheels/
+pip-wheel-metadata/
+*.whl
+
+# ============================================================
+# Test, lint, type-check and coverage outputs
+# ============================================================
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.tox/
+.nox/
+.hypothesis/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+nosetests.xml
+junit.xml
+pytestdebug.log
+
+# ============================================================
+# Logs and temporary files
+# ============================================================
+*.log
+*.log.*
+*.tmp
+*.temp
+*.bak
+*.swp
+*.swo
+*~
+
+# ============================================================
+# Secrets and local environment configuration
+# Keep .env.example / .env.template as safe templates only.
+# Never put real tokens, passwords, connection strings or secrets in them.
+# ============================================================
+.env
+.env.*
+!.env.example
+!.env.template
+*.secret
+*.secrets
+*.token
+*.pem
+*.pfx
+*.p12
+*.key
+*.jks
+*.keystore
+
+# Local Azure / Databricks authentication or CLI state
+.azure/
+.databricks/
+.databrickscfg
+.azureProfile.json
+*.publishsettings
+
+# Terraform state, in case Terraform is used locally alongside Bicep
+*.tfstate
+*.tfstate.*
+.terraform/
+
+# ============================================================
+# Generated data and Spark/Notebook runtime artifacts
+# Keep data/contracts/ and source fixtures tracked where appropriate.
+# ============================================================
+data/generated/
+.spark-warehouse/
+metastore_db/
+derby.log
+.ipynb_checkpoints/
+*/.ipynb_checkpoints/
+
+# ============================================================
+# Editors and operating systems
+# ============================================================
+.idea/
+.vscode/
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# ============================================================
+# Local developer files
+# ============================================================
+*.local
+*.orig

@@ -1,0 +1,1 @@
+'{"name":"RetailTheme","dataColors":["#0284C7","#0EA5E9","#10B981","#F59E0B","#EF4444","#6366F1","#8B5CF6","#EC4899"],"background":"#FFFFFF","foreground":"#0F172A","tableAccent":"#0284C7"}' | Out-File -FilePath "D:\clean_theme.json" -Encoding ascii -NoNewline

@@ -1,0 +1,15 @@
+{
+  "items": [
+    {
+      "sourceFolder": "source-drop/erp/customers/load_date=2026-10-12/run_id=demo",
+      "fileName": "customers.csv",
+      "sinkFolder": "landing/erp/customers/load_date=2026-10-12/run_id=demo"
+    },
+    {
+      "sourceFolder": "source-drop/erp/products/load_date=2026-10-12/run_id=demo",
+      "fileName": "products.csv",
+      "sinkFolder": "landing/erp/products/load_date=2026-10-12/run_id=demo"
+    }
+  ]
+}
+

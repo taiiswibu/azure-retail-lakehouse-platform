@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/contracts/clickstream-event.schema.json",
+  "title": "ClickstreamEvent",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["event_id", "event_ts", "session_id", "event_type", "anonymous_id"],
+  "properties": {
+    "event_id": {"type": "string", "format": "uuid"},
+    "event_ts": {"type": "string", "format": "date-time"},
+    "session_id": {"type": "string", "format": "uuid"},
+    "customer_id": {"type": ["string", "null"], "format": "uuid"},
+    "anonymous_id": {"type": "string", "minLength": 1},
+    "event_type": {
+      "type": "string",
+      "enum": ["page_view", "product_view", "add_to_cart", "checkout", "purchase"]
+    },
+    "product_id": {"type": ["string", "null"], "format": "uuid"},
+    "page": {"type": ["string", "null"]},
+    "device_type": {"type": ["string", "null"], "enum": ["mobile", "desktop", "tablet", null]},
+    "traffic_source": {"type": ["string", "null"]},
+    "quantity": {"type": ["integer", "null"], "minimum": 1}
+  }
+}
+
