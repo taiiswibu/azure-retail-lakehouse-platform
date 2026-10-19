@@ -542,8 +542,12 @@ Các ảnh dưới đây là ảnh chụp từ lần demo trước. Chúng chứ
     <td width="50%" valign="top"><strong>10. Power BI executive dashboard</strong><br/><img src="anh/Powerbi.png" alt="Power BI executive dashboard" width="100%"/><br/>Trang Executive Overview.</td>
   </tr>
   <tr>
-    <td width="50%" valign="top"><strong>11. Cost/budget view</strong><br/><img src="anh/12_cost_control.png" alt="Azure cost management budget" width="100%"/><br/>Màn hình Cost Management/Budgets.</td>
-    <td width="50%" valign="top"><strong>12. Cleanup command</strong><br/><img src="anh/12_cost_control1.png" alt="PowerShell resource group delete request" width="100%"/><br/>Ảnh terminal cho thấy yêu cầu xóa resource group đã được gửi; cần xác minh trạng thái cuối trên Azure Portal.</td>
+    <td width="50%" valign="top"><strong>11. GitHub Actions CI</strong><br/><img src="anh/11_github_actions.png" alt="GitHub Actions CI run successful" width="100%"/><br/>Workflow CI thành công tại commit được hiển thị trong ảnh; các cảnh báo runner không đồng nghĩa với lỗi pipeline.</td>
+    <td width="50%" valign="top"><strong>12. Cost/budget view</strong><br/><img src="anh/12_cost_control.png" alt="Azure cost management budget" width="100%"/><br/>Màn hình Cost Management/Budgets tại thời điểm chụp.</td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top"><strong>13. Cleanup command</strong><br/><img src="anh/12_cost_control1.png" alt="PowerShell resource group delete request" width="100%"/><br/>Ảnh terminal cho thấy yêu cầu xóa resource group đã được gửi; không tự nó xác nhận resource group đã xóa hoàn tất.</td>
+    <td width="50%" valign="top"></td>
   </tr>
 </table>
 
